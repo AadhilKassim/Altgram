@@ -12,6 +12,10 @@
   ],
   "routes": [
     {
+      "src": "/list-models",
+      "dest": "server.js"
+    },
+    {
       "src": "/generate-alt-text",
       "dest": "server.js"
     },
