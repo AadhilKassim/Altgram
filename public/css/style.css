@@ -1,0 +1,131 @@
+:root {
+    --background-color: #F0F4F9;
+    --primary-text-color: #1F1F1F;
+    --secondary-text-color: #5F6368;
+    --container-bg-color: #FFFFFF;
+    --header-bg-color: #FFFFFF;
+    --accent-blue: #1A73E8;
+    --assistant-message-bg: #E8F0FE;
+    --user-message-bg: #F1F3F4;
+    --border-color: #E0E0E0;
+    --font-family: 'Google Sans', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--primary-text-color);
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 700px;
+    height: 90vh;
+    background-color: var(--container-bg-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--header-bg-color);
+}
+
+.chat-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.chat-header p {
+    margin: 4px 0 0;
+    color: var(--secondary-text-color);
+    font-size: 14px;
+}
+
+.chat-window {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    word-wrap: break-word;
+}
+
+.assistant-message {
+    background-color: var(--assistant-message-bg);
+    color: #1F1F1F;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.user-message {
+    background-color: var(--user-message-bg);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.user-message img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 8px;
+}
+
+.thinking-message {
+    font-style: italic;
+    color: var(--secondary-text-color);
+}
+
+.chat-input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+}
+
+.upload-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.upload-button:hover {
+    background-color: #f0f0f0;
+}
+
+.upload-button svg {
+    color: var(--accent-blue);
+}
+
+.placeholder-text {
+    margin: 0;
+    margin-left: 12px;
+    color: var(--secondary-text-color);
+    font-size: 15px;
+}
