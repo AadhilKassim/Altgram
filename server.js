@@ -16,25 +16,6 @@ app.use(express.static('public'));
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// --- NEW DEBUG ENDPOINT ---
-app.get('/list-models', async (req, res) => {
-  try {
-    console.log('Fetching available models...');
-    const models = await genAI.listModels();
-    let modelList = [];
-    for await (const m of models) {
-        // Log each model found to the server logs
-        console.log("Found model:", m.name, "methods:", m.supportedGenerationMethods);
-        modelList.push({ name: m.name, methods: m.supportedGenerationMethods });
-    }
-    // Return the list as a JSON response
-    res.json(modelList);
-  } catch(error) {
-    console.error('Error listing models:', error);
-    res.status(500).json({ error: 'Failed to list models', details: error.message });
-  }
-});
-
 // Endpoint to handle image upload and generate alt text
 app.post('/generate-alt-text', upload.single('image'), async (req, res) => {
   if (!req.file) {
@@ -46,7 +27,8 @@ app.post('/generate-alt-text', upload.single('image'), async (req, res) => {
     return res.status(500).json({ error: 'Server configuration error: API key not found.' });
   }
 
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' }); // Still using this for now
+  // --- THE ONLY CHANGE IS THIS LINE ---
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const buffer = req.file.buffer;
   const mimeType = req.file.mimetype;
