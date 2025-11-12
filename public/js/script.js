@@ -28,38 +28,41 @@ document.addEventListener('DOMContentLoaded', () => {
         return messageDiv;
     }
 
-    async function handleImageUpload(file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            // Display user's image
-            addMessageToChat(`<p>Uploaded Image:</p><img src="${e.target.result}" alt="User uploaded image">`, 'user');
+// In public/js/script.js
 
-            // Show thinking indicator
-            const thinkingMessage = addMessageToChat('<p class="thinking-message">Generating alt text...</p>', 'assistant');
+async function handleImageUpload(file) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        // Display user's image
+        addMessageToChat(`<p>Uploaded Image:</p><img src="${e.target.result}" alt="User uploaded image">`, 'user');
 
-            const formData = new FormData();
-            formData.append('image', file);
+        // Show thinking indicator
+        const thinkingMessage = addMessageToChat('<p class="thinking-message">Generating alt text...</p>', 'assistant');
 
-            try {
-                const response = await fetch('/generate-alt-text', {
-                    method: 'POST',
-                    body: formData,
-                });
+        const formData = new FormData();
+        formData.append('image', file);
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+        try {
+            const response = await fetch('/generate-alt-text', {
+                method: 'POST',
+                body: formData,
+            });
 
-                const data = await response.json();
-                
-                // Remove thinking message and show result
-                thinkingMessage.innerHTML = `<p>${data.altText}</p>`;
+            const data = await response.json(); // Always try to get the JSON body
 
-            } catch (error) {
-                console.error('Error:', error);
-                thinkingMessage.innerHTML = '<p>Sorry, I was unable to generate alt text for that image.</p>';
+            if (!response.ok) {
+                // If response is not ok, throw an error with the details from the server
+                throw new Error(data.error || 'Unknown server error');
             }
-        };
-        reader.readAsDataURL(file);
-    }
-});
+
+            // Success: Remove thinking message and show result
+            thinkingMessage.innerHTML = `<p>${data.altText}</p>`;
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Display the specific error message from the server
+            thinkingMessage.innerHTML = `<p>Sorry, an error occurred: ${error.message}</p>`;
+        }
+    };
+    reader.readAsDataURL(file);
+}
