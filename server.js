@@ -36,12 +36,23 @@ app.post('/generate-alt-text', upload.single('image'), async (req, res) => {
     return res.status(400).json({ error: 'No image uploaded.' });
   }
 
+  // Check if API key is present
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY is not set.');
+    return res.status(500).json({ error: 'Server configuration error: API key not found.' });
+  }
+
   const buffer = req.file.buffer;
   const mimeType = req.file.mimetype;
 
   try {
     const prompt = 'Generate a short, descriptive alt text for this image.';
-    const imagePart = bufferToGenerativePart(buffer, mimeType);
+    const imagePart = {
+      inlineData: {
+        data: buffer.toString('base64'),
+        mimeType,
+      },
+    };
 
     const result = await model.generateContent([prompt, imagePart]);
     const response = await result.response;
@@ -49,10 +60,14 @@ app.post('/generate-alt-text', upload.single('image'), async (req, res) => {
 
     res.json({ altText: text });
   } catch (error) {
-    console.error('Error generating alt text:', error);
-    res.status(500).json({ error: 'Failed to generate alt text.' });
+    // Log the actual error from Google's API on the server
+    console.error('Error calling Gemini API:', error); 
+    
+    // Send a more descriptive error to the client
+    res.status(500).json({ error: 'Failed to generate alt text from API.', details: error.message });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
